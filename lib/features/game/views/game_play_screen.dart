@@ -68,7 +68,7 @@ class GamePlayScreen extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.surfaceVariant, // Adapte au thème
+        color: Theme.of(context).colorScheme.surfaceContainerHigh, // Adapte au thème
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
