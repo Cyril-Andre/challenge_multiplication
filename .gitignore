@@ -38,3 +38,4 @@ web/main.dart.js.map
 
 # Miscellaneous
 test/**.tmp
+.flutter-plugins-dependencies
