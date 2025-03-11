@@ -6,32 +6,46 @@ Challenge Multiplication est une application mobile Flutter conçue pour aider l
 ## 📚 Architecture
 L'application est organisée selon une architecture en oignon (Clean Architecture) avec MVVM (Model-View-ViewModel), en isolant chaque feature dans son propre répertoire :
 ```
-lib/
-├── features/            # Regroupe toutes les fonctionnalités
-│   ├── game/            # Feature du jeu principal
-│   │   ├── models/      # Modèles spécifiques à la fonctionnalité
-│   │   ├── services/    # Services liés à la logique métier
-│   │   ├── viewmodels/  # Logique de présentation et gestion d'état (Provider)
-│   │   ├── views/       # Interfaces utilisateur (UI)
-│   │   ├── widgets/     # Composants spécifiques à la feature
-│   ├── history/         # Feature de l'historique des scores
-│   │   ├── models/
+challenge_multiplication/
+├── .fvmrc
+├── .gitignore
+├── pubspec.yaml
+├── README.md
+├── assets/
+│   ├── config/.env.local
+│   ├── config/.env.prod
+├── lib/
+│   ├── common/
 │   │   ├── services/
-│   │   ├── viewmodels/
-│   │   ├── views/
+│   │   │   ├── router.dart
 │   │   ├── widgets/
-│   ├── settings/        # Feature des paramètres
-│   │   ├── models/
-│   │   ├── services/
-│   │   ├── viewmodels/
-│   │   ├── views/
-│   │   ├── widgets/
-├── common/              # Composants réutilisables (widgets, modèles, services, viewmodels)
-│   ├── widgets/         # Widgets partagés
-│   ├── viewmodels/      # ViewModels communs
-│   ├── models/          # Modèles de données partagés
-│   ├── services/        # Services génériques
-├── main.dart            # Point d'entrée de l'application
+│   │   │   ├── app_scaffold.dart
+│   │   ├── theme.dart
+│   ├── features/
+│   │   ├── game/
+│   │   │   ├── models/
+│   │   │   │   ├── multiplication.dart
+│   │   │   ├── viewmodels/
+│   │   │   │   ├── game_viewmodel.dart
+│   │   │   │   ├── game_play_screen_viewmodel.dart
+│   │   │   ├── views/
+│   │   │   │   ├── game_screen.dart
+│   │   │   │   ├── game_play_screen.dart
+│   │   │   │   ├── game_result_screen.dart
+│   │   ├── home/
+│   │   │   ├── models/
+│   │   │   ├── viewmodels/
+│   │   │   ├── views/
+│   │   │   │   ├── home_screen.dart
+│   │   ├── history/
+│   │   ├── settings/
+│   ├── theme/
+│   │   ├── theme.dart
+│   ├── challenge_multiplication.dart
+│   ├── common_main.dart
+│   ├── main_local.dart
+│   ├── main_prod.dart
+│   ├── main.dart
 
 ## 🛠 Fonctionnalités
 - ✨ **Génération de multiplications aléatoires** (tables de 3 à 9)
