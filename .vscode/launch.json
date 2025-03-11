@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter Web (Chrome)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_local.dart",
+        "toolArgs": [
+          "-d",
+          "chrome"
+        ]
+      },
+      {
+        "name": "Flutter Mobile (Device)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_local.dart",
+        "toolArgs": [
+          "-d",
+          "device"
+        ]
+      },
+      {
+        "name": "Flutter Prod (Web)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_prod.dart",
+        "toolArgs": [
+          "-d",
+          "chrome"
+        ]
+      },
+      {
+        "name": "Flutter Prod (Mobile)",
+        "request": "launch",
+        "type": "dart",
+        "program": "lib/main_prod.dart",
+        "toolArgs": [
+          "-d",
+          "device"
+        ]
+      }
+    ]
+  }
+  
