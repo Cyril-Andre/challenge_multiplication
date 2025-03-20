@@ -1,6 +1,9 @@
+import 'package:challenge_multiplication/common/globals.dart';
 import 'package:challenge_multiplication/common/widgets/app_scaffold.dart';
 import 'package:challenge_multiplication/features/game/models/multiplication.dart';
 import 'package:challenge_multiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challenge_multiplication/features/players/services/player_service.dart';
+import 'package:challenge_multiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,16 +13,18 @@ class GamePlayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GamePlayViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.timeRemaining == 60) {
+    return Consumer3<GamePlayViewModel, PlayerSelectionViewModel, PlayerService>(
+      builder: (context, gamePlayViewModel, playerSelectionViewModel, playerService, child) {
+        if (gamePlayViewModel.timeRemaining == Globals.timeLimit) {
           // Vérifier que le timer n'a pas déjà démarré
-          viewModel.startTimer();
+          gamePlayViewModel.startTimer();
         }
 
-        if (viewModel.timeRemaining == 0) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go("/game_result");
+        if (gamePlayViewModel.timeRemaining == 0) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+              if (context.mounted) {
+              context.go("/game_result");
+            }
           });
         }
 
@@ -35,9 +40,9 @@ class GamePlayScreen extends StatelessWidget {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: CircularProgressIndicator(value: viewModel.timeRemaining / 60, strokeWidth: 8, color: Colors.blue, backgroundColor: Colors.grey[300]),
+                      child: CircularProgressIndicator(value: gamePlayViewModel.timeRemaining / Globals.timeLimit, strokeWidth: 8, color: Colors.blue, backgroundColor: Colors.grey[300]),
                     ),
-                    Text('${viewModel.timeRemaining}s', style: Theme.of(context).textTheme.headlineSmall),
+                    Text('${gamePlayViewModel.timeRemaining}s', style: Theme.of(context).textTheme.headlineSmall),
                   ],
                 ),
               ),
@@ -47,10 +52,11 @@ class GamePlayScreen extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     alignment: WrapAlignment.center,
-                    children: viewModel.multiplications.map((multiplication) {
-                      int index = viewModel.multiplications.indexOf(multiplication);
-                      return buildMultiplicationCard(context, viewModel, multiplication, index);
-                    }).toList(),
+                    children:
+                        gamePlayViewModel.multiplications.map((multiplication) {
+                          int index = gamePlayViewModel.multiplications.indexOf(multiplication);
+                          return buildMultiplicationCard(context, gamePlayViewModel, multiplication, index);
+                        }).toList(),
                   ),
                 ),
               ),
@@ -73,18 +79,12 @@ class GamePlayScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            '${multiplication.a} × ${multiplication.b} = ',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          Text('${multiplication.a} × ${multiplication.b} = ', style: Theme.of(context).textTheme.bodyLarge),
           Container(
             width: 50,
             height: 48,
             alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
-            ),
+            decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(4)),
             child: TextField(
               cursorHeight: 20,
               keyboardType: TextInputType.number,
@@ -92,11 +92,7 @@ class GamePlayScreen extends StatelessWidget {
               textAlignVertical: TextAlignVertical.center,
               onChanged: (value) => viewModel.setAnswer(index, value),
               enabled: viewModel.timeRemaining > 0,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
-              ),
+              decoration: const InputDecoration(border: InputBorder.none, contentPadding: EdgeInsets.zero, isDense: true),
               style: TextStyle(fontSize: 18),
             ),
           ),

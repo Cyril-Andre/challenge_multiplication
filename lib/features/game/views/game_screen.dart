@@ -11,7 +11,7 @@ class GameScreen extends StatelessWidget {
     final gameViewModel = Provider.of<GameViewModel>(context, listen: false);
     gameViewModel.startCountdown(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted && Navigator.of(context).canPop()) {
+        if (context.mounted && context.canPop()) {
           context.pop();
         }
         GoRouter.of(context).refresh();
