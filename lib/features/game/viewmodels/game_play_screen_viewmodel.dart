@@ -19,7 +19,7 @@ class GamePlayViewModel extends ChangeNotifier {
     final Set<String> generatedPairs = {}; // Utilisation d'un Set pour éviter les doublons
     final random = Random();
     int i = 0;
-    while (i < Globals.timeLimit) {
+    while (i < 20) {
       int a = random.nextInt(7) + 3; // Nombres entre 3 et 9
       int b = random.nextInt(7) + 3;
       String pairKey = "$a-$b"; // Nombres entre 1 et 10
