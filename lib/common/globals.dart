@@ -1,3 +1,3 @@
 class Globals {
-  static int timeLimit = 20;
+  static int timeLimit = 60;
 }
