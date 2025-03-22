@@ -1,5 +1,5 @@
-import 'package:challenge_multiplication/common/widgets/app_scaffold.dart';
-import 'package:challenge_multiplication/features/players/viewmodels/player_auth_view_model.dart';
+import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
+import 'package:challengemultiplication/features/players/viewmodels/player_auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,46 +20,55 @@ class PlayerAuthScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => PlayerAuthViewModel(correctPin: correctPin, onSuccess: onSuccess),
       child: AppScaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Consumer<PlayerAuthViewModel>(
-            builder: (context, viewModel, child) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Entrez le PIN de $playerName", style: TextStyle(fontSize: 18)),
-                  SizedBox(height: 20),
-                  
-                  // Affichage du PIN sous forme de ronds
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      4,
-                      (index) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Icon(
-                          index < viewModel.enteredPin.length ? Icons.circle : Icons.circle_outlined,
-                          size: 20,
-                          color: viewModel.hasError ? Colors.red : Colors.blue,
+        body: Consumer<PlayerAuthViewModel>(
+          builder: (context, viewModel, child) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: MediaQuery.of(context).size.height - kToolbarHeight - 32, // 32 = padding vertical
+                ),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Entrez le PIN de $playerName", style: TextStyle(fontSize: 18)),
+                        SizedBox(height: 20),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            4,
+                            (index) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Icon(
+                                index < viewModel.enteredPin.length ? Icons.circle : Icons.circle_outlined,
+                                size: 20,
+                                color: viewModel.hasError ? Colors.red : Colors.blue,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+
+                        if (viewModel.hasError)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text("PIN incorrect", style: TextStyle(color: Colors.red)),
+                          ),
+
+                        SizedBox(height: 30),
+
+                        _buildNumpad(viewModel),
+
+                        SizedBox(height: 20), // Un peu d'espace bas
+                      ],
                     ),
                   ),
-                  
-                  if (viewModel.hasError)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text("PIN incorrect", style: TextStyle(color: Colors.red)),
-                    ),
-                  
-                  SizedBox(height: 30),
-
-                  // Pavé numérique
-                  _buildNumpad(viewModel),
-                ],
-              );
-            },
-          ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -68,7 +77,12 @@ class PlayerAuthScreen extends StatelessWidget {
   Widget _buildNumpad(PlayerAuthViewModel viewModel) {
     return Column(
       children: [
-        for (var row in [['1', '2', '3'], ['4', '5', '6'], ['7', '8', '9'], ['⌫', '0', '✅']])
+        for (var row in [
+          ['1', '2', '3'],
+          ['4', '5', '6'],
+          ['7', '8', '9'],
+          ['⌫', '0', '✅']
+        ])
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: row.map((label) {

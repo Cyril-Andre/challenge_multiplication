@@ -1,5 +1,5 @@
-import 'package:challenge_multiplication/features/players/models/player.dart';
-import 'package:challenge_multiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/players/models/player.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -38,7 +38,7 @@ class PlayerRegisterViewModel extends ChangeNotifier {
     if (!canRegister) return;
 
     final player = Player(id: const Uuid().v4(), name: _name, pin: _enteredPin, settings: {"difficulty": 1}, history: []);
-    playerService.addPlayer(player);    
+    playerService.addPlayer(player);
     notifyListeners();
   }
 }

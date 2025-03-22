@@ -1,9 +1,9 @@
-import 'package:challenge_multiplication/common/widgets/app_scaffold.dart';
-import 'package:challenge_multiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
-import 'package:challenge_multiplication/features/history/models/history_entry.dart';
-import 'package:challenge_multiplication/features/players/models/player.dart';
-import 'package:challenge_multiplication/features/players/services/player_service.dart';
-import 'package:challenge_multiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challengemultiplication/features/history/models/history_entry.dart';
+import 'package:challengemultiplication/features/players/models/player.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -35,22 +35,21 @@ class GameResultScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Wrap(
                 alignment: WrapAlignment.center,
-                children:
-                    sortedEntries
-                        .map(
-                          (entry) => Container(
-                            padding: EdgeInsets.all(3),
-                            margin: EdgeInsets.all(2),
-                            decoration: BoxDecoration(color: entry.value > 1 ? Colors.red : null, border: Border.all(), borderRadius: BorderRadius.circular(5)),
-                            child: Text('${entry.key} : ${entry.value}'),
-                          ),
-                        )
-                        .toList(), // Important ici
+                children: sortedEntries
+                    .map(
+                      (entry) => Container(
+                        padding: EdgeInsets.all(3),
+                        margin: EdgeInsets.all(2),
+                        decoration: BoxDecoration(color: entry.value > 1 ? Colors.red : null, border: Border.all(), borderRadius: BorderRadius.circular(5)),
+                        child: Text('${entry.key} : ${entry.value}'),
+                      ),
+                    )
+                    .toList(), // Important ici
               ),
-              SizedBox(width: 200, child: ElevatedButton(onPressed: () => context.go('/game'), child: const Text('Rejouer'))),
+              SizedBox(width: 200, child: ElevatedButton(key: Key("Rejouer"), onPressed: () => context.go('/game'), child: const Text('Rejouer'))),
               const SizedBox(height: 10),
-              SizedBox(width: 200, child: OutlinedButton(onPressed: () => context.go('/history'), child: const Text("Voir l'historique"))),
-              SizedBox(width: 200, child: OutlinedButton(onPressed: () => context.go('/'), child: const Text("Retour à l'accueil"))),
+              SizedBox(width: 200, child: OutlinedButton(key: Key("Historique"), onPressed: () => context.go('/history'), child: const Text("Voir l'historique"))),
+              SizedBox(width: 200, child: OutlinedButton(key: Key("Home"), onPressed: () => context.go('/'), child: const Text("Retour à l'accueil"))),
             ],
           ),
         );

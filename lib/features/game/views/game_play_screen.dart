@@ -1,9 +1,9 @@
-import 'package:challenge_multiplication/common/globals.dart';
-import 'package:challenge_multiplication/common/widgets/app_scaffold.dart';
-import 'package:challenge_multiplication/features/game/models/multiplication.dart';
-import 'package:challenge_multiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
-import 'package:challenge_multiplication/features/players/services/player_service.dart';
-import 'package:challenge_multiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/common/globals.dart';
+import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
+import 'package:challengemultiplication/features/game/models/multiplication.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class GamePlayScreen extends StatelessWidget {
 
         if (gamePlayViewModel.timeRemaining == 0) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-              if (context.mounted) {
+            if (context.mounted) {
               context.go("/game_result");
             }
           });
@@ -40,7 +40,8 @@ class GamePlayScreen extends StatelessWidget {
                     SizedBox(
                       width: 40,
                       height: 40,
-                      child: CircularProgressIndicator(value: gamePlayViewModel.timeRemaining / Globals.timeLimit, strokeWidth: 8, color: Colors.blue, backgroundColor: Colors.grey[300]),
+                      child: CircularProgressIndicator(
+                          value: gamePlayViewModel.timeRemaining / Globals.timeLimit, strokeWidth: 8, color: Colors.blue, backgroundColor: Colors.grey[300]),
                     ),
                     Text('${gamePlayViewModel.timeRemaining}s', style: Theme.of(context).textTheme.headlineSmall),
                   ],
@@ -52,11 +53,10 @@ class GamePlayScreen extends StatelessWidget {
                     spacing: 10,
                     runSpacing: 10,
                     alignment: WrapAlignment.center,
-                    children:
-                        gamePlayViewModel.multiplications.map((multiplication) {
-                          int index = gamePlayViewModel.multiplications.indexOf(multiplication);
-                          return buildMultiplicationCard(context, gamePlayViewModel, multiplication, index);
-                        }).toList(),
+                    children: gamePlayViewModel.multiplications.map((multiplication) {
+                      int index = gamePlayViewModel.multiplications.indexOf(multiplication);
+                      return buildMultiplicationCard(context, gamePlayViewModel, multiplication, index);
+                    }).toList(),
                   ),
                 ),
               ),

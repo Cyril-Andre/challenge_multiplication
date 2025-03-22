@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:challenge_multiplication/challenge_multiplication_app.dart';
-import 'package:challenge_multiplication/common/services/router.dart';
-import 'package:challenge_multiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
-import 'package:challenge_multiplication/features/game/viewmodels/game_viewmodel.dart';
-import 'package:challenge_multiplication/features/players/services/player_service.dart';
-import 'package:challenge_multiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/challenge_multiplication_app.dart';
+import 'package:challengemultiplication/common/services/router.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_viewmodel.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:challenge_multiplication/common/globals.dart';
-import 'package:challenge_multiplication/features/game/models/multiplication.dart';
+import 'package:challengemultiplication/common/globals.dart';
+import 'package:challengemultiplication/features/game/models/multiplication.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 

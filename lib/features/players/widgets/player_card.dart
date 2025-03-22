@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:challenge_multiplication/features/players/models/player.dart';
+import 'package:challengemultiplication/features/players/models/player.dart';
 
 class PlayerCard extends StatelessWidget {
   final Player player;

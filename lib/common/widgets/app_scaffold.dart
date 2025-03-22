@@ -1,4 +1,4 @@
-import 'package:challenge_multiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

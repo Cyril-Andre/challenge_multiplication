@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:challenge_multiplication/features/history/models/history_entry.dart';
-import 'package:challenge_multiplication/features/players/models/player.dart';
+import 'package:challengemultiplication/features/history/models/history_entry.dart';
+import 'package:challengemultiplication/features/players/models/player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayerService {

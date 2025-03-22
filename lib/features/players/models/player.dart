@@ -1,11 +1,11 @@
-import 'package:challenge_multiplication/features/history/models/history_entry.dart';
+import 'package:challengemultiplication/features/history/models/history_entry.dart';
 
 class Player {
   final String id;
   final String name;
   final String pin;
   Map<String, dynamic> settings; // Contiendra les réglages futurs
-  List<HistoryEntry> history; 
+  List<HistoryEntry> history;
 
   Player({
     required this.id,

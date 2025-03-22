@@ -1,6 +1,6 @@
-import 'package:challenge_multiplication/features/history/viewmodels/history_viewmodel.dart';
-import 'package:challenge_multiplication/features/history/widget/score_card.dart';
-import 'package:challenge_multiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/history/viewmodels/history_viewmodel.dart';
+import 'package:challengemultiplication/features/history/widget/score_card.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +36,7 @@ class HistoryScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: ElevatedButton(
+                    key: Key("Home"),
                     onPressed: () {
                       context.go("/");
                     },
