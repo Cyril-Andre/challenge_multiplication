@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final ColorScheme colorScheme = ColorScheme.fromSeed(
-    seedColor: Color(0xFFC16AEF),// Colors.blue,
+    seedColor: Color(0xFFC16AEF), // Colors.blue,
     brightness: Brightness.light,
   );
 
@@ -49,12 +49,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        backgroundColor: colorScheme.secondary,
-        foregroundColor: colorScheme.onSecondary,
-      ),
-    ),
+    filledButtonTheme: FilledButtonThemeData(style: FilledButton.styleFrom(backgroundColor: colorScheme.secondary, foregroundColor: colorScheme.onSecondary)),
     /*
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -77,19 +72,9 @@ class AppTheme {
       ),
     ),
     */
-    cardTheme: CardTheme(
-      color: colorScheme.surface,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    iconTheme: IconThemeData(
-      color: colorScheme.onSurface,
-      size: 24,
-    ),
-    snackBarTheme: SnackBarThemeData(
-      backgroundColor: colorScheme.primary,
-      contentTextStyle: TextStyle(color: colorScheme.onPrimary, fontSize: 16),
-    ),
+    cardTheme: CardTheme(color: colorScheme.surface, elevation: 4, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+    iconTheme: IconThemeData(color: colorScheme.onSurface, size: 24),
+    snackBarTheme: SnackBarThemeData(backgroundColor: colorScheme.primary, contentTextStyle: TextStyle(color: colorScheme.onPrimary, fontSize: 16)),
     dialogTheme: DialogTheme(
       backgroundColor: colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

@@ -1,8 +1,8 @@
-import 'package:challenge_multiplication/common/widgets/app_scaffold.dart';
+import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:challenge_multiplication/features/game/viewmodels/game_viewmodel.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_viewmodel.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -11,7 +11,7 @@ class GameScreen extends StatelessWidget {
     final gameViewModel = Provider.of<GameViewModel>(context, listen: false);
     gameViewModel.startCountdown(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (context.mounted && Navigator.of(context).canPop()) {
+        if (context.mounted && context.canPop()) {
           context.pop();
         }
         GoRouter.of(context).refresh();
@@ -58,9 +58,9 @@ class GameScreen extends StatelessWidget {
         children: [
           Text('Réponds aux multiplications le plus vite possible !', style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
           const SizedBox(height: 20),
-          SizedBox(width: 200, child: ElevatedButton(onPressed: () => showCountdownDialog(context), child: const Text('Commencer'))),
+          SizedBox(width: 200, child: ElevatedButton(key: Key("Start"), onPressed: () => showCountdownDialog(context), child: const Text('Commencer'))),
           const SizedBox(height: 10),
-          SizedBox(width: 200, child: OutlinedButton(onPressed: () => context.go('/'), child: const Text("Retour à l'accueil"))),
+          SizedBox(width: 200, child: OutlinedButton(key: Key("Home"), onPressed: () => context.go('/'), child: const Text("Retour à l'accueil"))),
         ],
       ),
     );
