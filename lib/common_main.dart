@@ -5,6 +5,7 @@ import 'package:challengemultiplication/features/game/viewmodels/game_play_scree
 import 'package:challengemultiplication/features/game/viewmodels/game_viewmodel.dart';
 import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/features/settings/viewmodels/settings_viewmodel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -45,6 +46,7 @@ Future<void> commonMain(String environment) async {
         ChangeNotifierProvider(create: (_) => GamePlayViewModel()),
         Provider<PlayerService>.value(value: playerService),
         ChangeNotifierProvider(create: (_) => PlayerSelectionViewModel(playerService)),
+        ChangeNotifierProvider(create: (_) => SettingsViewModel(playerService: playerService))
       ],
       child: const ChallengeMultiplicationApp(),
     ),

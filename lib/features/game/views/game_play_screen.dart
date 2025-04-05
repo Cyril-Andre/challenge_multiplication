@@ -16,7 +16,9 @@ class GamePlayScreen extends StatelessWidget {
     return Consumer3<GamePlayViewModel, PlayerSelectionViewModel, PlayerService>(
       builder: (context, gamePlayViewModel, playerSelectionViewModel, playerService, child) {
         if (gamePlayViewModel.timeRemaining == Globals.timeLimit) {
-          // Vérifier que le timer n'a pas déjà démarré
+          if (!gamePlayViewModel.multiplicationsGenerated) {
+            gamePlayViewModel.generateMultiplications();
+          }
           gamePlayViewModel.startTimer();
         }
 

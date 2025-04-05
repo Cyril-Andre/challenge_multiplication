@@ -6,22 +6,24 @@ import 'dart:math';
 
 class GamePlayViewModel extends ChangeNotifier {
   int? finalScore;
-  int timeRemaining = Globals.timeLimit;
+  late int timeRemaining;
+  late int difficulty;
   Timer? _timer;
   final List<Multiplication> multiplications = [];
   final Map<int, int> errors = {};
-
-  GamePlayViewModel() {
-    generateMultiplications();
-  }
-
+  late int numberMultiplications;
+  bool multiplicationsGenerated = false;
   void generateMultiplications() {
+    multiplicationsGenerated = true;
+    difficulty = Globals.difficulty;
+    timeRemaining = Globals.timeLimit;
+    numberMultiplications = switch (difficulty) { 1 => 15, 2 => 18, 3 => 20, _ => 18 };
     final Set<String> generatedPairs = {}; // Utilisation d'un Set pour éviter les doublons
     final random = Random();
     int i = 0;
-    while (i < 20) {
-      int a = random.nextInt(7) + 3; // Nombres entre 3 et 9
-      int b = random.nextInt(7) + 3;
+    while (i < numberMultiplications) {
+      int a = random.nextInt(7) + difficulty; // Selon la difficulté : 1 => Nombres entre 1 et 6, 2=> 2 et 8, 3 => 3 et 9
+      int b = random.nextInt(7) + difficulty;
       String pairKey = "$a-$b"; // Nombres entre 1 et 10
       if (!generatedPairs.contains(pairKey)) {
         multiplications.add(Multiplication(a, b));

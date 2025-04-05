@@ -7,6 +7,8 @@ import 'package:challengemultiplication/features/home/views/home_screen.dart';
 import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:challengemultiplication/features/players/views/player_register_screen.dart';
 import 'package:challengemultiplication/features/players/views/player_selection_screen.dart';
+import 'package:challengemultiplication/features/settings/models/player_settings.dart';
+import 'package:challengemultiplication/features/settings/views/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -51,12 +53,12 @@ void setupRouter(String initialLocation) {
         path: '/history',
         builder: (context, state) => const HistoryScreen(),
       ),
-      /*    
+       
     GoRoute(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
     ),
-*/
+
     ],
   );
 }

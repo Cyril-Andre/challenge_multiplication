@@ -1,4 +1,5 @@
 import 'package:challengemultiplication/features/history/models/history_entry.dart';
+import 'package:challengemultiplication/features/settings/models/player_settings.dart';
 
 class Player {
   final String id;
@@ -14,6 +15,9 @@ class Player {
     required this.settings,
     required this.history,
   });
+
+  PlayerSettings get playerSettings => PlayerSettings.fromMap(settings);
+  set playerSettings(PlayerSettings value) => settings = value.toMap();
 
   factory Player.fromJson(Map<String, dynamic> json) {
     return Player(
