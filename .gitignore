@@ -3,6 +3,7 @@
 .packages
 .pub-cache/
 build/
+coverage/
 android/.gradle/
 android/app/google-services.json
 android/app/src/debug/
@@ -25,7 +26,10 @@ web/main.dart.js.map
 
 # IDEs & Editors
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
 *.iml
 
 # Logs & System files
