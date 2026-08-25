@@ -1,4 +1,4 @@
-import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +11,17 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Consumer<PlayerSelectionViewModel>(
+        title: Consumer<PlayerService>(
           builder: (context, viewModel, child) {
-            final String playerName = viewModel.selectedPlayer?.name ?? "";
-            return Text(playerName.isNotEmpty ? 'Challenge Multiplications - $playerName' : 'Challenge Multiplications');
+            final String playerName = viewModel.currentPlayer?.name ?? "";
+            return Text(playerName.isNotEmpty
+                ? 'Challenge Multiplications - $playerName'
+                : 'Challenge Multiplications');
           },
         ),
       ),
-      body: Center(child: Padding(padding: const EdgeInsets.all(16.0), child: body)),
+      body: Center(
+          child: Padding(padding: const EdgeInsets.all(16.0), child: body)),
     );
   }
 }

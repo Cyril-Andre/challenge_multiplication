@@ -13,7 +13,9 @@ import 'package:provider/provider.dart';
 class LocalHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -33,7 +35,8 @@ Future<void> commonMain(String environment) async {
   // Définir la route initiale avant d'instancier l'application
   final playerService = PlayerService();
   final players = await playerService.getPlayers();
-  final String initialLocation = players.isEmpty ? '/player_register' : '/player_selection';
+  final String initialLocation =
+      players.isEmpty ? '/player_register' : '/player_selection';
 
   // Initialiser le routeur avec la bonne route de départ
   setupRouter(initialLocation);
@@ -41,10 +44,14 @@ Future<void> commonMain(String environment) async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<PlayerService>.value(value: playerService),
         ChangeNotifierProvider(create: (_) => GameViewModel()),
-        ChangeNotifierProvider(create: (_) => GamePlayViewModel()),
-        Provider<PlayerService>.value(value: playerService),
-        ChangeNotifierProvider(create: (_) => PlayerSelectionViewModel(playerService)),
+        ChangeNotifierProvider(
+          create: (_) => GamePlayViewModel(playerService: playerService),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PlayerSelectionViewModel(playerService),
+        ),
       ],
       child: const ChallengeMultiplicationApp(),
     ),

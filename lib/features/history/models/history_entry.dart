@@ -7,15 +7,35 @@ class HistoryEntry {
 
   Map<String, dynamic> toJson() {
     return {
-      "date": DateFormat("yyyy-MM-dd hh:mm").format( date),
-      "score":score
+      "date": date.toIso8601String(),
+      "score": score,
     };
   }
 
   factory HistoryEntry.fromJson(Map<String, dynamic> json) {
     return HistoryEntry(
-      score: json['score'],
-      date: DateFormat("yyyy-MM-dd hh:mm").parse(json['date'])
+      score: json['score'] is int
+          ? json['score']
+          : int.tryParse(json['score'].toString()) ?? 0,
+      date: _parseDate(json['date'].toString()),
     );
+  }
+
+  static DateTime _parseDate(String value) {
+    final isoDate = DateTime.tryParse(value);
+    if (isoDate != null) return isoDate;
+
+    for (final format in [
+      DateFormat("yyyy-MM-dd HH:mm"),
+      DateFormat("yyyy-MM-dd hh:mm"),
+    ]) {
+      try {
+        return format.parseStrict(value);
+      } on FormatException {
+        // Try the next legacy format.
+      }
+    }
+
+    return DateTime.fromMillisecondsSinceEpoch(0);
   }
 }

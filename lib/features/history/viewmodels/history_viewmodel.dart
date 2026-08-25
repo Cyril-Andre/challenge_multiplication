@@ -11,12 +11,28 @@ class HistoryViewModel extends ChangeNotifier {
   HistoryViewModel(this._playerService);
 
   Future<void> loadPlayerHistory() async {
-    var allPlayers = await _playerService.getPlayers();
-    currentPlayer = allPlayers.firstWhere((p) => p.name == _playerService.currentPlayer?.name);
-    if (currentPlayer != null) {
-      history = currentPlayer!.history;
-      history.sort((a, b) => a.date.compareTo(b.date)); // Tri chrono
+    final currentPlayerId = _playerService.currentPlayer?.id;
+
+    if (currentPlayerId == null) {
+      currentPlayer = null;
+      history = [];
+      notifyListeners();
+      return;
     }
+
+    final allPlayers = await _playerService.getPlayers();
+    final matchingPlayers = allPlayers.where((p) => p.id == currentPlayerId);
+
+    currentPlayer = matchingPlayers.isEmpty ? null : matchingPlayers.first;
+
+    if (currentPlayer != null) {
+      history = List.of(currentPlayer!.history);
+      history.sort((a, b) => a.date.compareTo(b.date)); // Tri chrono
+      _playerService.currentPlayer = currentPlayer;
+    } else {
+      history = [];
+    }
+
     notifyListeners();
   }
 }

@@ -1,11 +1,23 @@
 import 'dart:convert';
 import 'package:challengemultiplication/features/history/models/history_entry.dart';
 import 'package:challengemultiplication/features/players/models/player.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PlayerService {
+class PlayerService extends ChangeNotifier {
   static const String _playersKey = 'players';
-  Player? currentPlayer;
+  static const String _zeroScoreHistoryCleanupFlagPrefix =
+      'history_cleanup_zero_before_2026_08_25_done:';
+  static final DateTime _zeroScoreHistoryCleanupCutoffDate =
+      DateTime(2026, 8, 25);
+  Player? _currentPlayer;
+
+  Player? get currentPlayer => _currentPlayer;
+
+  set currentPlayer(Player? player) {
+    _currentPlayer = player;
+    notifyListeners();
+  }
 
   Future<List<Player>> getPlayers() async {
     final prefs = await SharedPreferences.getInstance();
@@ -19,18 +31,77 @@ class PlayerService {
 
   Future<void> savePlayers(List<Player> players) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(_playersKey, jsonEncode(players.map((e) => e.toJson()).toList()));
+    await prefs.setString(
+      _playersKey,
+      jsonEncode(players.map((e) => e.toJson()).toList()),
+    );
   }
 
-  Future<void> updatePlayerHistory(Player player, HistoryEntry historyEntry) async {
+  Future<void> updatePlayerHistory(
+      Player player, HistoryEntry historyEntry) async {
     List<Player> allPlayers = await getPlayers();
-    allPlayers.firstWhere((p) => p.name == player.name).history.add(historyEntry);
-    savePlayers(allPlayers);
+    final playerIndex = allPlayers.indexWhere((p) => p.id == player.id);
+
+    if (playerIndex == -1) return;
+
+    allPlayers[playerIndex].history.add(historyEntry);
+
+    if (currentPlayer?.id == player.id) {
+      _currentPlayer = allPlayers[playerIndex];
+      notifyListeners();
+    }
+
+    await savePlayers(allPlayers);
+  }
+
+  Future<void> connectPlayer(Player player) async {
+    final selectedPlayer = await _cleanZeroScoreHistoryBeforeCutoff(player);
+    currentPlayer = selectedPlayer;
+  }
+
+  Future<Player> _cleanZeroScoreHistoryBeforeCutoff(Player player) async {
+    final prefs = await SharedPreferences.getInstance();
+    final flagKey = '$_zeroScoreHistoryCleanupFlagPrefix${player.id}';
+
+    if (prefs.getBool(flagKey) ?? false) {
+      return player;
+    }
+
+    final players = await getPlayers();
+    final playerIndex = players.indexWhere((p) => p.id == player.id);
+
+    if (playerIndex == -1) {
+      return player;
+    }
+
+    final storedPlayer = players[playerIndex];
+    final cleanedHistory = storedPlayer.history
+        .where((entry) =>
+            entry.score != 0 ||
+            !entry.date.isBefore(_zeroScoreHistoryCleanupCutoffDate))
+        .toList();
+
+    final selectedPlayer = Player(
+      id: storedPlayer.id,
+      name: storedPlayer.name,
+      pin: storedPlayer.pin,
+      settings: Map<String, dynamic>.from(storedPlayer.settings),
+      history: cleanedHistory,
+    );
+
+    if (cleanedHistory.length != storedPlayer.history.length) {
+      players[playerIndex] = selectedPlayer;
+      await savePlayers(players);
+    }
+
+    await prefs.setBool(flagKey, true);
+    return selectedPlayer;
   }
 
   Future<void> addPlayer(Player player) async {
     List<Player> players = await getPlayers();
     players.add(player);
     await savePlayers(players);
+    notifyListeners();
   }
 }

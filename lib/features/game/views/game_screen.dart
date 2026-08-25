@@ -1,4 +1,6 @@
 import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
+import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +16,9 @@ class GameScreen extends StatelessWidget {
         if (context.mounted && context.canPop()) {
           context.pop();
         }
-        GoRouter.of(context).refresh();
+        if (context.mounted) {
+          context.read<GamePlayViewModel>().resetGame();
+        }
         Future.microtask(() {
           if (context.mounted) {
             context.go("/game_play");
@@ -36,9 +40,11 @@ class GameScreen extends StatelessWidget {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Concentre-toi, le challenge va commencer', textAlign: TextAlign.center),
+                    const Text('Concentre-toi, le challenge va commencer',
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 10),
-                    Text('${viewModel.countdown}', style: Theme.of(context).textTheme.displayLarge),
+                    Text('${viewModel.countdown}',
+                        style: Theme.of(context).textTheme.displayLarge),
                   ],
                 ),
               );
@@ -51,16 +57,54 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentPlayer = context.watch<PlayerService>().currentPlayer;
+
+    if (currentPlayer == null) {
+      return AppScaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Choisis un joueur avant de lancer une partie',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () => context.go('/player_selection'),
+                child: const Text('Choisir un joueur'),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return AppScaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('Réponds aux multiplications le plus vite possible !', style: Theme.of(context).textTheme.headlineSmall, textAlign: TextAlign.center),
+          Text('Réponds aux multiplications le plus vite possible !',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center),
           const SizedBox(height: 20),
-          SizedBox(width: 200, child: ElevatedButton(key: Key("Start"), onPressed: () => showCountdownDialog(context), child: const Text('Commencer'))),
+          SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                  key: Key("Start"),
+                  onPressed: () => showCountdownDialog(context),
+                  child: const Text('Commencer'))),
           const SizedBox(height: 10),
-          SizedBox(width: 200, child: OutlinedButton(key: Key("Home"), onPressed: () => context.go('/'), child: const Text("Retour à l'accueil"))),
+          SizedBox(
+              width: 200,
+              child: OutlinedButton(
+                  key: Key("Home"),
+                  onPressed: () => context.go('/'),
+                  child: const Text("Retour à l'accueil"))),
         ],
       ),
     );
