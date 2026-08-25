@@ -32,9 +32,9 @@ class PlayerSelectionViewModel extends ChangeNotifier {
       builder: (sheetContext) => PlayerAuthScreen(
         playerName: player.name,
         correctPin: player.pin,
-        onSuccess: () {
+        onSuccess: () async {
           sheetContext.pop(); // Ferme le bottomsheet
-          _playerService.currentPlayer = player;
+          await _playerService.connectPlayer(player);
 
           if (parentContext.mounted) {
             parentContext.go("/");

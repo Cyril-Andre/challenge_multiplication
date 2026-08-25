@@ -6,6 +6,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PlayerService extends ChangeNotifier {
   static const String _playersKey = 'players';
+  static const String _zeroScoreHistoryCleanupFlagPrefix =
+      'history_cleanup_zero_before_2026_08_25_done:';
+  static final DateTime _zeroScoreHistoryCleanupCutoffDate =
+      DateTime(2026, 8, 25);
   Player? _currentPlayer;
 
   Player? get currentPlayer => _currentPlayer;
@@ -48,6 +52,50 @@ class PlayerService extends ChangeNotifier {
     }
 
     await savePlayers(allPlayers);
+  }
+
+  Future<void> connectPlayer(Player player) async {
+    final selectedPlayer = await _cleanZeroScoreHistoryBeforeCutoff(player);
+    currentPlayer = selectedPlayer;
+  }
+
+  Future<Player> _cleanZeroScoreHistoryBeforeCutoff(Player player) async {
+    final prefs = await SharedPreferences.getInstance();
+    final flagKey = '$_zeroScoreHistoryCleanupFlagPrefix${player.id}';
+
+    if (prefs.getBool(flagKey) ?? false) {
+      return player;
+    }
+
+    final players = await getPlayers();
+    final playerIndex = players.indexWhere((p) => p.id == player.id);
+
+    if (playerIndex == -1) {
+      return player;
+    }
+
+    final storedPlayer = players[playerIndex];
+    final cleanedHistory = storedPlayer.history
+        .where((entry) =>
+            entry.score != 0 ||
+            !entry.date.isBefore(_zeroScoreHistoryCleanupCutoffDate))
+        .toList();
+
+    final selectedPlayer = Player(
+      id: storedPlayer.id,
+      name: storedPlayer.name,
+      pin: storedPlayer.pin,
+      settings: Map<String, dynamic>.from(storedPlayer.settings),
+      history: cleanedHistory,
+    );
+
+    if (cleanedHistory.length != storedPlayer.history.length) {
+      players[playerIndex] = selectedPlayer;
+      await savePlayers(players);
+    }
+
+    await prefs.setBool(flagKey, true);
+    return selectedPlayer;
   }
 
   Future<void> addPlayer(Player player) async {
