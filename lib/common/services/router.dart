@@ -7,7 +7,6 @@ import 'package:challengemultiplication/features/home/views/home_screen.dart';
 import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:challengemultiplication/features/players/views/player_register_screen.dart';
 import 'package:challengemultiplication/features/players/views/player_selection_screen.dart';
-import 'package:challengemultiplication/features/settings/models/player_settings.dart';
 import 'package:challengemultiplication/features/settings/views/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -23,13 +22,18 @@ void setupRouter(String initialLocation) {
         path: '/',
         builder: (context, state) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Provider.of<PlayerSelectionViewModel>(context, listen: false).loadPlayers();
+            Provider.of<PlayerSelectionViewModel>(context, listen: false)
+                .loadPlayers();
           });
           return const HomeScreen();
         },
       ),
-      GoRoute(path: '/player_register', builder: (context, state) => PlayerRegisterScreen()),
-      GoRoute(path: '/player_selection', builder: (context, state) => PlayerSelectionScreen()),
+      GoRoute(
+          path: '/player_register',
+          builder: (context, state) => PlayerRegisterScreen()),
+      GoRoute(
+          path: '/player_selection',
+          builder: (context, state) => PlayerSelectionScreen()),
       GoRoute(
         path: '/game',
         builder: (context, state) {
@@ -48,17 +52,17 @@ void setupRouter(String initialLocation) {
           return const GamePlayScreen();
         },
       ),
-      GoRoute(path: '/game_result', builder: (context, state) => const GameResultScreen()),
+      GoRoute(
+          path: '/game_result',
+          builder: (context, state) => const GameResultScreen()),
       GoRoute(
         path: '/history',
         builder: (context, state) => const HistoryScreen(),
       ),
-       
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => const SettingsScreen(),
-    ),
-
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
     ],
   );
 }

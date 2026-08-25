@@ -11,14 +11,17 @@ class PlayerRegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PlayerRegisterViewModel(playerService: Provider.of<PlayerService>(context, listen: false)),
+      create: (_) => PlayerRegisterViewModel(
+          playerService: Provider.of<PlayerService>(context, listen: false)),
       child: AppScaffold(
         body: Consumer<PlayerRegisterViewModel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: MediaQuery.of(context).size.height - kToolbarHeight - 32, // 32 = padding vertical
+                  minHeight: MediaQuery.of(context).size.height -
+                      kToolbarHeight -
+                      32, // 32 = padding vertical
                 ),
                 child: IntrinsicHeight(
                   child: Padding(
@@ -70,7 +73,9 @@ class PlayerRegisterScreen extends StatelessWidget {
                 (index) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Icon(
-                    index < viewModel.enteredPin.length ? Icons.circle : Icons.circle_outlined,
+                    index < viewModel.enteredPin.length
+                        ? Icons.circle
+                        : Icons.circle_outlined,
                     size: 20,
                     color: Colors.blue,
                   ),
@@ -109,7 +114,8 @@ class PlayerRegisterScreen extends StatelessWidget {
     );
   }
 
-  Widget buildNumpadButton(String label, PlayerRegisterViewModel viewModel, BuildContext context) {
+  Widget buildNumpadButton(
+      String label, PlayerRegisterViewModel viewModel, BuildContext context) {
     return GestureDetector(
       key: Key(label),
       onTap: () async {
@@ -128,8 +134,11 @@ class PlayerRegisterScreen extends StatelessWidget {
         width: 70,
         height: 70,
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: label == '✅' ? Colors.green : Colors.blueGrey[200], shape: BoxShape.circle),
-        child: Text(label, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        decoration: BoxDecoration(
+            color: label == '✅' ? Colors.green : Colors.blueGrey[200],
+            shape: BoxShape.circle),
+        child: Text(label,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -142,7 +151,9 @@ class PlayerRegisterScreen extends StatelessWidget {
           onPressed: viewModel.canRegister
               ? () async {
                   await viewModel.registerPlayer();
-                  context.go("/player_selection");
+                  if (context.mounted) {
+                    context.go("/player_selection");
+                  }
                 }
               : null,
           child: Text("S'inscrire"),
