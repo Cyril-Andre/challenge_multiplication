@@ -6,23 +6,34 @@ import 'dart:math';
 
 class GamePlayViewModel extends ChangeNotifier {
   int? finalScore;
-  late int timeRemaining;
-  late int difficulty;
+  int timeRemaining = Globals.timeLimit;
+  int difficulty = Globals.difficulty;
   Timer? _timer;
   final List<Multiplication> multiplications = [];
   final Map<int, int> errors = {};
-  late int numberMultiplications;
+  int numberMultiplications = 0;
   bool multiplicationsGenerated = false;
+
+  int get totalQuestions => multiplications.isNotEmpty
+      ? multiplications.length
+      : numberMultiplications;
+
   void generateMultiplications() {
+    multiplications.clear();
+    errors.clear();
+    finalScore = null;
     multiplicationsGenerated = true;
     difficulty = Globals.difficulty;
     timeRemaining = Globals.timeLimit;
-    numberMultiplications = switch (difficulty) { 1 => 15, 2 => 18, 3 => 20, _ => 18 };
-    final Set<String> generatedPairs = {}; // Utilisation d'un Set pour éviter les doublons
+    numberMultiplications =
+        switch (difficulty) { 1 => 15, 2 => 18, 3 => 20, _ => 18 };
+    final Set<String> generatedPairs =
+        {}; // Utilisation d'un Set pour éviter les doublons
     final random = Random();
     int i = 0;
     while (i < numberMultiplications) {
-      int a = random.nextInt(7) + difficulty; // Selon la difficulté : 1 => Nombres entre 1 et 6, 2=> 2 et 8, 3 => 3 et 9
+      int a = random.nextInt(7) +
+          difficulty; // Selon la difficulté : 1 => Nombres entre 1 et 6, 2=> 2 et 8, 3 => 3 et 9
       int b = random.nextInt(7) + difficulty;
       String pairKey = "$a-$b"; // Nombres entre 1 et 10
       if (!generatedPairs.contains(pairKey)) {
@@ -34,11 +45,14 @@ class GamePlayViewModel extends ChangeNotifier {
   }
 
   void startTimer() {
+    if (_timer?.isActive ?? false) return;
+
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timeRemaining > 0) {
         timeRemaining--;
-        Future.microtask(() => notifyListeners()); // Empêche les erreurs pendant le build
+        Future.microtask(
+            () => notifyListeners()); // Empêche les erreurs pendant le build
       } else {
         timer.cancel();
       }
@@ -49,9 +63,6 @@ class GamePlayViewModel extends ChangeNotifier {
     if (index >= 0 && index < multiplications.length) {
       multiplications[index].userAnswer = value;
       calculateFinalScore();
-    }
-    if (index >= 0 && index < multiplications.length) {
-      multiplications[index].userAnswer = value;
     }
   }
 
@@ -69,9 +80,16 @@ class GamePlayViewModel extends ChangeNotifier {
     return finalScore!;
   }
 
+  int ensureFinalScore() {
+    return finalScore ?? calculateFinalScore();
+  }
+
   void resetGame() {
+    _timer?.cancel();
+    _timer = null;
     timeRemaining = Globals.timeLimit;
     finalScore = null;
+    multiplicationsGenerated = false;
     multiplications.clear();
     errors.clear();
     generateMultiplications();

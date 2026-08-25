@@ -19,13 +19,26 @@ class PlayerService {
 
   Future<void> savePlayers(List<Player> players) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(_playersKey, jsonEncode(players.map((e) => e.toJson()).toList()));
+    await prefs.setString(
+      _playersKey,
+      jsonEncode(players.map((e) => e.toJson()).toList()),
+    );
   }
 
-  Future<void> updatePlayerHistory(Player player, HistoryEntry historyEntry) async {
+  Future<void> updatePlayerHistory(
+      Player player, HistoryEntry historyEntry) async {
     List<Player> allPlayers = await getPlayers();
-    allPlayers.firstWhere((p) => p.name == player.name).history.add(historyEntry);
-    savePlayers(allPlayers);
+    final playerIndex = allPlayers.indexWhere((p) => p.id == player.id);
+
+    if (playerIndex == -1) return;
+
+    allPlayers[playerIndex].history.add(historyEntry);
+
+    if (currentPlayer?.id == player.id) {
+      currentPlayer = allPlayers[playerIndex];
+    }
+
+    await savePlayers(allPlayers);
   }
 
   Future<void> addPlayer(Player player) async {

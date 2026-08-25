@@ -90,12 +90,20 @@ class SettingsFormWidget extends StatelessWidget {
                 ),
                 ElevatedButton.icon(
                   onPressed: () async {
-                    await viewModel.saveSettings();
+                    final saved = await viewModel.saveSettings();
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Paramètres sauvegardés !')),
+                        SnackBar(
+                          content: Text(
+                            saved
+                                ? 'Paramètres sauvegardés !'
+                                : 'Aucun joueur sélectionné',
+                          ),
+                        ),
                       );
-                      context.pop();
+                      if (saved) {
+                        context.pop();
+                      }
                     }
                   },
                   icon: const Icon(Icons.save),

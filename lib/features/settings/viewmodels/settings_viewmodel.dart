@@ -5,12 +5,12 @@ import 'package:challengemultiplication/features/players/services/player_service
 
 class SettingsViewModel extends ChangeNotifier {
   final PlayerService playerService;
-  late PlayerSettings settings;
+  PlayerSettings settings;
 
-  SettingsViewModel({required this.playerService}) {
-    final player = playerService.currentPlayer!;
-    settings = PlayerSettings.fromMap(player.settings);
-  }
+  SettingsViewModel({required this.playerService})
+      : settings = PlayerSettings.fromMap(
+          playerService.currentPlayer?.settings ?? {},
+        );
 
   int get timelimit => settings.timelimit;
   int get difficulty => settings.difficulty;
@@ -31,17 +31,23 @@ class SettingsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveSettings() async {
-    final currentPlayer = playerService.currentPlayer!;
+  Future<bool> saveSettings() async {
+    final currentPlayer = playerService.currentPlayer;
+
+    if (currentPlayer == null) return false;
+
     currentPlayer.settings = settings.toMap();
 
     final players = await playerService.getPlayers();
     final index = players.indexWhere((p) => p.id == currentPlayer.id);
-    if (index != -1) {
-      players[index] = currentPlayer;
-      await playerService.savePlayers(players);
-    }
+
+    if (index == -1) return false;
+
+    players[index] = currentPlayer;
+    await playerService.savePlayers(players);
+
     Globals.difficulty = settings.difficulty;
     Globals.timeLimit = settings.timelimit;
+    return true;
   }
 }
