@@ -37,8 +37,13 @@ class PlayerRegisterViewModel extends ChangeNotifier {
   Future<void> registerPlayer() async {
     if (!canRegister) return;
 
-    final player = Player(id: const Uuid().v4(), name: _name, pin: _enteredPin, settings: {"difficulty": 1}, history: []);
-    playerService.addPlayer(player);
+    final player = Player(
+        id: const Uuid().v4(),
+        name: _name,
+        pin: _enteredPin,
+        settings: {"difficulty": 1},
+        history: []);
+    await playerService.addPlayer(player);
     notifyListeners();
   }
 }

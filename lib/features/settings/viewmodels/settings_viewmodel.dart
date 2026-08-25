@@ -1,4 +1,3 @@
-import 'package:challengemultiplication/common/globals.dart';
 import 'package:challengemultiplication/features/settings/models/player_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:challengemultiplication/features/players/services/player_service.dart';
@@ -45,9 +44,7 @@ class SettingsViewModel extends ChangeNotifier {
 
     players[index] = currentPlayer;
     await playerService.savePlayers(players);
-
-    Globals.difficulty = settings.difficulty;
-    Globals.timeLimit = settings.timelimit;
+    playerService.currentPlayer = currentPlayer;
     return true;
   }
 }

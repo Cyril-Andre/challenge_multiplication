@@ -1,6 +1,4 @@
-import 'package:challengemultiplication/common/globals.dart';
 import 'package:challengemultiplication/features/players/services/player_service.dart';
-import 'package:challengemultiplication/features/settings/models/player_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../models/player.dart';
@@ -11,9 +9,6 @@ class PlayerSelectionViewModel extends ChangeNotifier {
   List<Player> _players = [];
 
   List<Player> get players => _players;
-
-  Player? _selectedPlayer;
-  Player? get selectedPlayer => _selectedPlayer;
 
   PlayerSelectionViewModel(this._playerService) {
     loadPlayers();
@@ -29,27 +24,23 @@ class PlayerSelectionViewModel extends ChangeNotifier {
   }
 
   void selectPlayer(Player player, BuildContext context) {
+    final parentContext = context;
+
     showModalBottomSheet(
-      context: context,
+      context: parentContext,
       isScrollControlled: true, // si tu veux un bottomsheet plein écran
-      builder: (context) => PlayerAuthScreen(
+      builder: (sheetContext) => PlayerAuthScreen(
         playerName: player.name,
         correctPin: player.pin,
         onSuccess: () {
-          context.pop(); // Ferme le bottomsheet
-          _selectedPlayer = player;
-          _loadPlayerData(player, context);
+          sheetContext.pop(); // Ferme le bottomsheet
           _playerService.currentPlayer = player;
+
+          if (parentContext.mounted) {
+            parentContext.go("/");
+          }
         },
       ),
     );
-  }
-
-  void _loadPlayerData(Player player, BuildContext context) {
-    // Ici, nous pouvons charger les settings et l'historique du joueur
-    PlayerSettings settings = PlayerSettings.fromMap(player.settings);
-    Globals.difficulty = settings.difficulty;
-    Globals.timeLimit = settings.timelimit;
-    context.go("/", extra: player);
   }
 }

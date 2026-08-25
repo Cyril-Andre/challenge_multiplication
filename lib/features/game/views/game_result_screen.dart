@@ -4,7 +4,6 @@ import 'package:challengemultiplication/common/widgets/app_scaffold.dart';
 import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
 import 'package:challengemultiplication/features/history/models/history_entry.dart';
 import 'package:challengemultiplication/features/players/services/player_service.dart';
-import 'package:challengemultiplication/features/players/viewmodels/player_selection_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +25,8 @@ class _GameResultScreenState extends State<GameResultScreen> {
     if (_historySaved) return;
 
     final gamePlayViewModel = context.read<GamePlayViewModel>();
-    final playerSelectionViewModel = context.read<PlayerSelectionViewModel>();
     final playerService = context.read<PlayerService>();
-    final player =
-        playerSelectionViewModel.selectedPlayer ?? playerService.currentPlayer;
+    final player = playerService.currentPlayer;
 
     if (player == null || gamePlayViewModel.totalQuestions == 0) return;
 
@@ -46,12 +43,9 @@ class _GameResultScreenState extends State<GameResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<GamePlayViewModel, PlayerSelectionViewModel,
-        PlayerService>(
-      builder:
-          (context, viewModel, playerSelectionViewModel, playerService, child) {
-        final player = playerSelectionViewModel.selectedPlayer ??
-            playerService.currentPlayer;
+    return Consumer2<GamePlayViewModel, PlayerService>(
+      builder: (context, viewModel, playerService, child) {
+        final player = playerService.currentPlayer;
         final int totalQuestions = viewModel.totalQuestions;
 
         if (player == null) {

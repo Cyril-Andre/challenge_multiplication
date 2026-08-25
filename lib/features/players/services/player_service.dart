@@ -1,11 +1,19 @@
 import 'dart:convert';
 import 'package:challengemultiplication/features/history/models/history_entry.dart';
 import 'package:challengemultiplication/features/players/models/player.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PlayerService {
+class PlayerService extends ChangeNotifier {
   static const String _playersKey = 'players';
-  Player? currentPlayer;
+  Player? _currentPlayer;
+
+  Player? get currentPlayer => _currentPlayer;
+
+  set currentPlayer(Player? player) {
+    _currentPlayer = player;
+    notifyListeners();
+  }
 
   Future<List<Player>> getPlayers() async {
     final prefs = await SharedPreferences.getInstance();
@@ -35,7 +43,8 @@ class PlayerService {
     allPlayers[playerIndex].history.add(historyEntry);
 
     if (currentPlayer?.id == player.id) {
-      currentPlayer = allPlayers[playerIndex];
+      _currentPlayer = allPlayers[playerIndex];
+      notifyListeners();
     }
 
     await savePlayers(allPlayers);
@@ -45,5 +54,6 @@ class PlayerService {
     List<Player> players = await getPlayers();
     players.add(player);
     await savePlayers(players);
+    notifyListeners();
   }
 }

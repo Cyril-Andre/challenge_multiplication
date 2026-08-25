@@ -5,18 +5,27 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../widgets/player_card.dart';
 
-class PlayerSelectionScreen extends StatelessWidget {
+class PlayerSelectionScreen extends StatefulWidget {
   const PlayerSelectionScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = Provider.of<PlayerSelectionViewModel>(context, listen: false);
+  State<PlayerSelectionScreen> createState() => _PlayerSelectionScreenState();
+}
 
-    // Déclencher le refresh sans StatefulWidget
+class _PlayerSelectionScreenState extends State<PlayerSelectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.refresh();
+      if (mounted) {
+        context.read<PlayerSelectionViewModel>().refresh();
+      }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return AppScaffold(
       body: Consumer<PlayerSelectionViewModel>(
         builder: (context, viewModel, child) {

@@ -1,30 +1,40 @@
 import 'dart:async';
-import 'package:challengemultiplication/common/globals.dart';
 import 'package:challengemultiplication/features/game/models/multiplication.dart';
+import 'package:challengemultiplication/features/players/services/player_service.dart';
+import 'package:challengemultiplication/features/settings/models/player_settings.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
 class GamePlayViewModel extends ChangeNotifier {
+  final PlayerService playerService;
   int? finalScore;
-  int timeRemaining = Globals.timeLimit;
-  int difficulty = Globals.difficulty;
+  int timeRemaining = PlayerSettings.defaults().timelimit;
+  int timeLimit = PlayerSettings.defaults().timelimit;
+  int difficulty = PlayerSettings.defaults().difficulty;
   Timer? _timer;
   final List<Multiplication> multiplications = [];
   final Map<int, int> errors = {};
   int numberMultiplications = 0;
   bool multiplicationsGenerated = false;
 
+  GamePlayViewModel({required this.playerService});
+
   int get totalQuestions => multiplications.isNotEmpty
       ? multiplications.length
       : numberMultiplications;
+
+  PlayerSettings get _currentSettings =>
+      playerService.currentPlayer?.playerSettings ?? PlayerSettings.defaults();
 
   void generateMultiplications() {
     multiplications.clear();
     errors.clear();
     finalScore = null;
     multiplicationsGenerated = true;
-    difficulty = Globals.difficulty;
-    timeRemaining = Globals.timeLimit;
+    final settings = _currentSettings;
+    difficulty = settings.difficulty;
+    timeLimit = settings.timelimit;
+    timeRemaining = timeLimit;
     numberMultiplications =
         switch (difficulty) { 1 => 15, 2 => 18, 3 => 20, _ => 18 };
     final Set<String> generatedPairs =
@@ -49,13 +59,20 @@ class GamePlayViewModel extends ChangeNotifier {
 
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (timeRemaining > 0) {
-        timeRemaining--;
-        Future.microtask(
-            () => notifyListeners()); // Empêche les erreurs pendant le build
-      } else {
+      if (timeRemaining <= 0) {
         timer.cancel();
+        _timer = null;
+        return;
       }
+
+      timeRemaining--;
+
+      if (timeRemaining == 0) {
+        timer.cancel();
+        _timer = null;
+      }
+
+      notifyListeners();
     });
   }
 
@@ -87,7 +104,6 @@ class GamePlayViewModel extends ChangeNotifier {
   void resetGame() {
     _timer?.cancel();
     _timer = null;
-    timeRemaining = Globals.timeLimit;
     finalScore = null;
     multiplicationsGenerated = false;
     multiplications.clear();

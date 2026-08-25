@@ -44,9 +44,11 @@ Future<void> commonMain(String environment) async {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider<PlayerService>.value(value: playerService),
         ChangeNotifierProvider(create: (_) => GameViewModel()),
-        ChangeNotifierProvider(create: (_) => GamePlayViewModel()),
-        Provider<PlayerService>.value(value: playerService),
+        ChangeNotifierProvider(
+          create: (_) => GamePlayViewModel(playerService: playerService),
+        ),
         ChangeNotifierProvider(
           create: (_) => PlayerSelectionViewModel(playerService),
         ),
