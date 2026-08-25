@@ -1,4 +1,5 @@
 import 'package:challengemultiplication/features/game/viewmodels/game_play_screen_viewmodel.dart';
+import 'package:challengemultiplication/features/game/models/multiplication.dart';
 import 'package:challengemultiplication/features/players/models/player.dart';
 import 'package:challengemultiplication/features/players/services/player_service.dart';
 import 'package:fake_async/fake_async.dart';
@@ -104,6 +105,34 @@ void main() {
       expect(viewModel.finalScore, isNull);
     });
 
+    test('uses configured multiplication count before generation', () {
+      final service = PlayerService();
+      final viewModel = GamePlayViewModel(playerService: service);
+      addTearDown(viewModel.dispose);
+      addTearDown(service.dispose);
+
+      viewModel.numberMultiplications = 12;
+
+      expect(viewModel.totalQuestions, 12);
+    });
+
+    test('calculates final score lazily when needed', () {
+      final service = PlayerService();
+      final viewModel = GamePlayViewModel(playerService: service);
+      addTearDown(viewModel.dispose);
+      addTearDown(service.dispose);
+
+      viewModel.multiplications.addAll([
+        Multiplication(2, 3)..userAnswer = '6',
+        Multiplication(4, 5)..userAnswer = '0',
+      ]);
+
+      expect(viewModel.finalScore, isNull);
+      expect(viewModel.ensureFinalScore(), 1);
+      expect(viewModel.finalScore, 1);
+      expect(viewModel.errors, {4: 1, 5: 1});
+    });
+
     test('timer ticks once per second and does not start twice', () {
       fakeAsync((async) {
         final service = PlayerService();
@@ -122,6 +151,27 @@ void main() {
         expect(viewModel.timeRemaining, 0);
 
         async.elapse(const Duration(seconds: 10));
+
+        expect(viewModel.timeRemaining, 0);
+
+        viewModel.dispose();
+        service.dispose();
+      });
+    });
+
+    test('timer stops immediately when no time remains', () {
+      fakeAsync((async) {
+        final service = PlayerService();
+        final viewModel = GamePlayViewModel(playerService: service);
+
+        viewModel.timeRemaining = 0;
+        viewModel.startTimer();
+
+        async.elapse(const Duration(seconds: 1));
+
+        expect(viewModel.timeRemaining, 0);
+
+        async.elapse(const Duration(seconds: 5));
 
         expect(viewModel.timeRemaining, 0);
 
